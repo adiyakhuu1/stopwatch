@@ -1,37 +1,77 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { Time } from "./component/timer";
+import { Stopwatch } from "./stopwatch";
+import { Eczar } from "next/font/google";
+import { Montserrat } from "next/font/google";
+const eczar = Eczar({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 export default function Home() {
   const [running, startRunning] = useState(false);
-  const [timer, setTimer] = useState(0);
+  const [countingDown, startCountingDown] = useState(false);
+  const [modal, createModal] = useState(false);
+  const [count, startCount] = useState(0);
+  const [mode, switchMode] = useState(false);
+  const [second, runSecond] = useState(0);
+  const [minute, runMinute] = useState(0);
+  const [hour, runHour] = useState(0);
   useEffect(() => {
     let stopwatch;
     if (running) {
       stopwatch = setInterval(() => {
-        setTimer((prev) => {
-          if (timer === 60) {
-            setTimer(0);
+        if (second >= 60) {
+          runSecond(0);
+          runMinute((p) => p + 1);
+          if (minute >= 60) {
+            runMinute(0);
+            runHour((p) => p + 1);
           }
-          return prev + 1;
-        });
-        console.log(timer);
+        }
+        runSecond((p) => p + 1);
+        console.log(second);
       }, 1000);
-    } else {
-      clearInterval(stopwatch);
     }
-    return clearInterval(stopwatch);
-  }, [running]);
+    return () => clearInterval(stopwatch);
+  }, [running, second]);
+  const stop = (stop) => {
+    startRunning(stop);
+  };
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="flex gap-4">
-        <button
-          onClick={() => {
-            startRunning(!running);
-          }}
-        >
-          {running ? "Stop" : "Start"}
-        </button>
-        <div>{timer}</div>
+    <div className={` ${montserrat.className}`}>
+      <button
+        onClick={() => {
+          switchMode(!mode);
+          stop(false);
+        }}
+      >
+        Switch to {mode ? "Stopwatch" : "Timer"}
+      </button>
+      <div className="">
+        {mode ? (
+          <Time
+            mode={mode}
+            stop={stop}
+            running={running}
+            startRunning={startRunning}
+            second={second}
+            minute={minute}
+            hour={hour}
+          />
+        ) : (
+          <Time
+            createModal={createModal}
+            modal={modal}
+            count={count}
+            setCount={startCount}
+            mode={mode}
+            stop={stop}
+            running={running}
+            startRunning={startRunning}
+            second={second}
+            minute={minute}
+            hour={hour}
+          />
+        )}
       </div>
     </div>
   );
