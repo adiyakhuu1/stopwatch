@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Time } from "./component/timer";
-import { Stopwatch } from "./stopwatch";
 import { Eczar } from "next/font/google";
 import { Montserrat } from "next/font/google";
 const eczar = Eczar({ subsets: ["latin"] });
@@ -15,6 +14,7 @@ export default function Home() {
   const [second, runSecond] = useState(0);
   const [minute, runMinute] = useState(0);
   const [hour, runHour] = useState(0);
+  // Stopwatch +
   useEffect(() => {
     let stopwatch;
     if (running) {
@@ -33,6 +33,18 @@ export default function Home() {
     }
     return () => clearInterval(stopwatch);
   }, [running, second]);
+  // Stopwatch -
+  // Timer +
+  useEffect(() => {
+    let stopwatch;
+    if (countingDown) {
+      startCount(count * 60);
+      stopwatch = setInterval(() => {
+        startCount((p) => p - 1);
+      }, 1000);
+    }
+  });
+  // Timer -
   const stop = (stop) => {
     startRunning(stop);
   };
@@ -42,9 +54,8 @@ export default function Home() {
         onClick={() => {
           switchMode(!mode);
           stop(false);
-        }}
-      >
-        Switch to {mode ? "Stopwatch" : "Timer"}
+        }}>
+        Switch to {mode ? "Timer" : "Stopwatch"}
       </button>
       <div className="">
         {mode ? (

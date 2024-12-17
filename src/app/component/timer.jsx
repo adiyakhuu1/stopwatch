@@ -10,6 +10,8 @@ export const Time = ({
   mode,
   createModal,
   modal,
+  setCount,
+  count,
 }) => {
   return (
     <>
@@ -33,13 +35,14 @@ export const Time = ({
                 createModal(true);
               }
             }}
-            className="bg-white w-[70%] fixed text-black justify-center text-9xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
-          >
-            {hour} : {minute} : {second}
+            className="bg-white w-[70%] fixed text-black justify-center text-9xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+            {mode === false
+              ? `${hour} : ${minute} : ${second}`
+              : `${hour} : ${minute} : ${second}`}
           </button>
         </div>
       </div>
-      {modal === true && <Popup />}
+      {modal === true && <Popup setCount={setCount} count={count} />}
     </>
   );
 };
