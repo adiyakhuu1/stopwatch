@@ -12,6 +12,13 @@ export const Time = ({
   modal,
   setCount,
   count,
+  timer,
+  setTimer,
+  timerS,
+  timerH,
+  startTimer,
+  countingDown,
+  setTimerS,
 }) => {
   return (
     <>
@@ -31,18 +38,31 @@ export const Time = ({
             onClick={() => {
               if (mode === true) {
                 stop(!running);
-              } else {
+              } else if (!countingDown) {
+                startTimer(true);
+              } else if (modal === false) {
                 createModal(true);
               }
             }}
-            className="bg-white w-[70%] fixed text-black justify-center text-9xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+            className="bg-white w-[70%] fixed text-black justify-center text-9xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+          >
             {mode === false
-              ? `${hour} : ${minute} : ${second}`
-              : `${hour} : ${minute} : ${second}`}
+              ? `${timerH} : ${timer} : ${timerS}`
+              : `${Math.floor(hour)} : ${Math.floor(minute)} : ${second}`}
           </button>
         </div>
       </div>
-      {modal === true && <Popup setCount={setCount} count={count} />}
+      {modal === true && (
+        <Popup
+          setCount={setCount}
+          count={count}
+          modal={modal}
+          createModal={createModal}
+          setTimer={setTimer}
+          timer={timer}
+          setTimerS={setTimerS}
+        />
+      )}
     </>
   );
 };
