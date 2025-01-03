@@ -65,7 +65,7 @@ export default function Home() {
       }, 1000);
     }
     return () => clearInterval(stopwatch);
-  }, [countingDown, timerS]);
+  }, [countingDown]);
   // Timer -
   const stop = (stop) => {
     startRunning(stop);
